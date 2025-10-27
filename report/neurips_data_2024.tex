@@ -39,22 +39,7 @@
 
 \section{Data Cleaning}
 
-Please read the instructions below carefully and follow them faithfully.
-
-\subsection{Style}
-
-Papers must be prepared according to the
-instructions presented here. Papers may only be up to {\bf nine} pages long,
-including figures. Additional pages \emph{containing only acknowledgments and
-references} are allowed. Papers that exceed the page limit will not be
-reviewed, or in any other way considered for presentation at the conference.
-
-Authors are required to use the NeurIPS \LaTeX{} style files obtainable at the
-NeurIPS website as indicated below. Please make sure you use the current files
-and not previous versions. Tweaking the style files may be grounds for
-rejection.
-
-\subsection{Retrieval of style files}
+The NBA 2022-23 statistics dataset underwent systematic data cleaning and preprocessing to ensure data quality and prepare it for machine learning analysis. First, we removed the redundant index column (\texttt{Unnamed: 0}) that duplicated the DataFrame's built-in index. We then addressed data type inconsistencies, particularly in the \texttt{3P} (3-Point Field Goals Made) column, which contained string values with spurious 's' characters (e.g., '1.s6' instead of '1.6'). Missing values in shooting percentage columns (\texttt{3P\%}, \texttt{FT\%}, \texttt{FG\%}, etc.) were filled with zero, as these typically indicated zero attempts rather than missing data. To address data quality concerns related to players with minimal playing time, we applied minimal filtering criteria, retaining only players with at least 5 games played and 25 total minutes, which removed approximately 467 players with negligible statistical impact while preserving meaningful data. For machine learning applications, we removed identifier columns (\texttt{Player Name}, \texttt{Team}, \texttt{Position}), applied log transformation to the \texttt{Salary} feature to reduce skewness, split the data into training (70\%), validation (15\%), and test (15\%) sets with a fixed random seed (42) for reproducibility, and standardized all features to zero mean and unit variance using \texttt{StandardScaler}. This comprehensive preprocessing pipeline resulted in 48 numeric features ready for dimensionality reduction and clustering analysis.
 
 \section{Dimensionality Reduction}
 
