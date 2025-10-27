@@ -162,4 +162,38 @@ By using the table of averages above is how we were able to properly describe th
     \caption{t-SNE + K-Means Clustering.}
 \end{figure}
 
+\subsection{Autoencoders + UMAP}
+
+UMAP (Uniform Manifold Approximation and Projection) provides an alternative dimensionality reduction approach that preserves both local and global structure of the data. We applied UMAP to the 2D autoencoder latent vectors with parameters: 20 neighbors, minimum distance of 0.1, and random initialization (random seed 42). Unlike t-SNE which focuses primarily on local similarity, UMAP better preserves the global structure while maintaining computational efficiency and producing more stable embeddings.
+
+Following UMAP dimensionality reduction, we applied k-Means clustering (k=5) to identify player archetypes. Table~\ref{tab:umap_cluster_stats} presents the statistical profiles of the discovered clusters.
+
+\begin{table}[h!]
+\centering
+\caption{UMAP K-Means Cluster Statistical Summary}
+\label{tab:umap_cluster_stats}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Cluster} & \textbf{PTS} & \textbf{AST\%} & \textbf{STL\%} & \textbf{BLK\%} & \textbf{ORB\%} & \textbf{DRB\%} \\
+\midrule
+0: 3\&D Wings & 7.47 & 12.43 & 1.50 & 1.40 & 3.53 & 12.42 \\
+1: Bench Specialists & 9.09 & 13.39 & 1.61 & 1.67 & 4.50 & 13.93 \\
+2: Star Scorers/Bigs & 5.00 & 9.79 & 1.39 & 1.97 & 6.29 & 14.71 \\
+3: Limited-Min Starters & 5.37 & 10.73 & 1.47 & 1.68 & 6.03 & 14.97 \\
+4: Lead Guards & 14.91 & 17.23 & 1.40 & 2.07 & 6.15 & 17.21 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The UMAP clustering reveals five distinct player groups with more granular role definitions compared to the autoencoder-only approach: {\bf Cluster 0 (3\&D Wings)} captures role players like Nicolas Batum, Eric Gordon, and Joe Harris who specialize in three-point shooting and defense with moderate scoring (7.47 PPG); {\bf Cluster 1 (Bench Specialists)} includes veteran contributors like John Wall, Klay Thompson, and Khris Middleton with balanced production (9.09 PPG, 13.39\% AST); {\bf Cluster 2 (Star Scorers/Bigs)} identifies emerging talent and role bigs like Nerlens Noel and Keldon Johnson with lower scoring (5.00 PPG) but solid rebounding presence (6.29\% ORB); {\bf Cluster 3 (Limited-Minute Starters)} contains players like Kemba Walker and Evan Fournier transitioning to reduced roles (5.37 PPG); {\bf Cluster 4 (Lead Guards)} captures the league's elite including Stephen Curry, LeBron James, Kevin Durant, and Russell Westbrook with the highest scoring (14.91 PPG) and playmaking (17.23\% AST).
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{media/2d.png}
+    \caption{UMAP + K-Means Clustering showing preserved global structure with distinct player archetypes.}
+    \label{fig:umap_clustering}
+\end{figure}
+
+The UMAP visualization in Figure~\ref{fig:umap_clustering} demonstrates clearer cluster separation compared to t-SNE, with the elite players (Cluster 4) forming a distinct region, while role players and specialists occupy separate but connected regions. The preservation of global structure allows for better interpretation of the relationships between different player archetypes, showing how bench specialists (Cluster 1) transition into elite roles (Cluster 4), while 3\&D wings (Cluster 0) and limited-minute players (Cluster 3) occupy more specialized niches in the player ecosystem.
+
 \end{document}
