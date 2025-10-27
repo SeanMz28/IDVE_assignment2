@@ -45,6 +45,23 @@ The NBA 2022-23 statistics dataset underwent systematic data cleaning and prepro
 
 \subsection{Autoencoders + Self-organising maps}
 
+\begin{table}[h!]
+\centering
+\caption{Cluster Statistical Summary (mean values per player group)}
+\label{tab:cluster_stats}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Cluster} & \textbf{PTS} & \textbf{AST\%} & \textbf{STL\%} & \textbf{BLK\%} & \textbf{ORB\%} & \textbf{DRB\%} \\
+\midrule
+Blue: Rotational contributors & 8.03 & 13.04 & 1.58 & 1.39 & 3.88 &	12.68 \\
+Orange: Defensive players & 6.22 & 10.34 & 1.42 & 2.49 & 7.32 & 16.35 \\
+Green: Franchise players & 20.58 & 18.58 & 1.36 & 2.74 & 7.92 & 21.35 \\
+Red: Deep Bench & 4.81	& 9.89 &	1.43 &	1.90 &	6.54 &	15.55 \\
+Purple: Primary Perimeter Scoring Options & 17.42	&20.77 &	1.43 &	1.39	& 3.60	& 14.81 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 In this section we made use of the latent vectors derived from the autoencoders in 2.1.a combined with a SOMs approach.
 The SOMs approach helps us understand the continuous similarity patterns between the player roles, and we later use it to then derive two graphs: U-matrix and the Player cluster. The U-matrix will be used to show class boundaries:
 
@@ -61,11 +78,11 @@ Finally we use the Player cluster to help us interpretate the different data poi
 
 {\bf Cluster Descriptions:}
 \begin{itemize}
-    \item \textcolor{blue}{Blue}: Bench role players
+    \item \textcolor{blue}{Blue}: Rotational contributors
     \item \textcolor{orange}{Orange}: Defensive players
-    \item \textcolor{green}{Green}: Secondary playmakers
-    \item \textcolor{red}{Red}: Players with limited minutes
-    \item \textcolor{purple}{Purple}: Primary scoring starters
+    \item \textcolor{green}{Green}: Franchise players
+    \item \textcolor{red}{Red}: Deep Bench
+    \item \textcolor{purple}{Purple}: Primary Perimeter Scoring Options
 \end{itemize}
 
 \subsection{Autoencoders + t-SNE}
