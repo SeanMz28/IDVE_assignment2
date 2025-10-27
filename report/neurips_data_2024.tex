@@ -13,6 +13,7 @@
 \usepackage{nicefrac}       % compact symbols for 1/2, etc.
 \usepackage{microtype}      % microtypography
 \usepackage{xcolor}         % colors
+\usepackage{graphicx} 
 
 \title{Assignment 2: NBA Dataset}
 
@@ -57,5 +58,68 @@ rejection.
 
 \section{Dimensionality Reduction}
 
+\subsection{Autoencoders + Self-organising maps}
+
+In this section we made use of the latent vectors derived from the autoencoders in 2.1.a combined with a SOMs approach.
+The SOMs approach helps us understand the continuous similarity patterns between the player roles, and we later use it to then derive two graphs: U-matrix and the Player cluster. The U-matrix will be used to show class boundaries:
+
+The {\bf light areas} indicate large distances between the neurons which translates to a strong difference between the group of players.
+The {\bf dark areas} indicate small distances between the neurons which are homogeneous regions where players have similar profiles.
+
+Finally we use the Player cluster to help us analyse the different data points in the clusters and their mapping from the U-matrix gradients with the cluster descriptions given in the print above. In the section bellow we introduce the cluster statistical summaries \ref{tab:cluster_stats} where we present the data used to generate these descriptions.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{media/2b.png}
+    \caption{SOM U-Matrix showing cluster separation.}
+\end{figure}
+
+{\bf Cluster Descriptions:}
+\begin{itemize}
+    \item \textcolor{blue}{Blue}: Bench Role Players
+    \item \textcolor{orange}{Orange}: Defensive Bench Bigs
+    \item \textcolor{green}{Green}: Secondary Playmakers
+    \item \textcolor{red}{Red}: Players with limited minutes
+    \item \textcolor{purple}{Purple}: Primary Scoring Starters
+\end{itemize}
+
+\subsection{Autoencoders + t-SNE}
+
+\begin{table}[h!]
+\centering
+\caption{Cluster Statistical Summary (mean values per player group)}
+\label{tab:cluster_stats}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Cluster} & \textbf{PTS} & \textbf{AST\%} & \textbf{STL\%} & \textbf{BLK\%} & \textbf{ORB\%} & \textbf{DRB\%} \\
+\midrule
+0: Bench Role Players & 6.98 & 12.19 & 1.52 & 1.47 & 4.00 & 12.83 \\
+1: Defensive Bench Bigs & 6.19 & 10.43 & 1.43 & 2.24 & 6.81 & 16.60 \\
+2: Secondary Playmakers & 13.08 & 16.68 & 1.57 & 1.31 & 3.30 & 12.97 \\
+3: Players with Limited Minutes & 4.93 & 10.13 & 1.44 & 1.92 & 6.65 & 15.37 \\
+4: Primary Scoring Starters & 20.04 & 20.76 & 1.42 & 2.12 & 6.13 & 18.30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This section uses the t-SNE approach which helps us focus on local similarity, preserving players who are close in feature space and it is also useful for visualizing distinct roles clearly. For our interpretation we will make use of the cluster statistical summary and the K-Means clustering.
+
+By using the table of averages above is how we were able to properly describe the clusters:
+
+{\bf Cluster 0:} Bench role players with a moderate average of assists as well as defensive rebounds. Meaning, the players in this cluster are good on defense and they can set up the plays, but lack in scoring stats.
+
+{\bf Cluster 1:} Defensive bench players. These players tend to be quite tall compared to the others which facilitates in ball possession, and this is backed up by the offensive/defensive rebound averages, however even though they can get a moderate average of assists, their scoring ability is a weakness.
+
+{\bf Cluster 2:} Secondary playmakers also called the 6th man. These players are in charge of setting up the plays, while also being able to score themselves and participate on the defence. They are players who ensure good ball movement on the court, and we see this by looking at the points, average of assists and defensive rebound. 
+
+{\bf Cluster 3:} Players with limited minutes. In the basketball roster the role and talent of a player speaks volumes, and often we get players who are not able to perform at the high level or given opportunities in a team full of talents. Most of these players are quite good on defence and assists, but lack heavily on the scoring sheet.
+
+{\bf Cluster 4:} Starters. These players are all-rounders when it comes to playmaking, scoring and defensive abilities and they compose the 5 main players of the roster.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{media/2c.png}
+    \caption{t-SNE + K-Means Clustering.}
+\end{figure}
 
 \end{document}
