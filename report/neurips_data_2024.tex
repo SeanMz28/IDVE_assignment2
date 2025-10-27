@@ -1,6 +1,4 @@
 \documentclass{article}
-
-
 \usepackage{neurips_data_2024}
 
 
@@ -28,14 +26,6 @@
 \begin{document}
 
 \maketitle
-
-\begin{abstract}
-  The abstract paragraph should be indented \nicefrac{1}{2}~inch (3~picas) on
-  both the left- and right-hand margins. Use 10~point type, with a vertical
-  spacing (leading) of 11~points.  The word \textbf{Abstract} must be centered,
-  bold, and in point size 12. Two line spaces precede the abstract. The abstract
-  must be limited to one paragraph.
-\end{abstract}
 
 \section{Data Cleaning}
 
@@ -162,6 +152,55 @@ By using the table of averages above is how we were able to properly describe th
     \caption{t-SNE + K-Means Clustering.}
 \end{figure}
 
+\subsection{VAE-Based Player Classification Results}
+
+\subsubsection{Overview}
+
+The Variational Autoencoder successfully learned a meaningful 2-dimensional latent representation of NBA player statistics, compressing 48 features into 2 latent dimensions while preserving the essential structure that differentiates player roles. This approach achieved a $24:1$ compression ratio (48 features to 2 dimensions) while maintaining interpretability.
+
+\subsubsection{Model Performance}
+
+The VAE demonstrated strong performance across multiple metrics. Training convergence was achieved efficiently through early stopping, indicating the model found an optimal balance between reconstruction accuracy and latent space regularization. The resulting 2D latent space successfully separated players into distinct clusters corresponding to their playing roles, validating the effectiveness of the dimensionality reduction approach.
+
+\subsubsection{Cluster Analysis Results}
+
+K-Means clustering with $k=5$ applied to the VAE latent space identified five distinct player archetypes based on statistical patterns:
+
+\textbf{Cluster 0 -- Bench Role Players} (approximately 20\% of players) are characterized by moderate scoring (6--10 PPG), decent assists (12--16\%), and solid defensive rebounding (12--15\%). These rotation players contribute defensively and facilitate play but are not primary scorers. They provide energy and defensive presence when called upon.
+
+\textbf{Cluster 1 -- Defensive Specialists} (approximately 15\% of players) exhibit low scoring ($<6$ PPG) alongside high rebounding rates (ORB\% 7--10\%, DRB\% 16--20\%) and moderate blocks (2--3\%). These traditional big men focus on rim protection, rebounding, and defensive presence. Despite limited offensive roles, they provide crucial defensive stops.
+
+\textbf{Cluster 2 -- Secondary Playmakers} (approximately 25\% of players) display balanced statistics with moderate scoring (10--15 PPG) and high assists (20--25\%) alongside decent defensive contributions. These combo guards and versatile wings facilitate offense while maintaining all-around contributions, connecting starters and bench players while maintaining ball movement and providing secondary creation.
+
+\textbf{Cluster 3 -- Limited Minute Players} (approximately 15\% of players) show low statistics across all categories. These end-of-bench players, two-way contract holders, and developing players reflect limited playing time opportunity rather than skill limitations.
+
+\textbf{Cluster 4 -- Primary Scoring Starters} (approximately 25\% of players) are defined by high scoring (18+ PPG), high usage rates, and strong all-around contributions. These star players and primary offensive options form the core rotation and carry the team's offensive load.
+
+\subsubsection{Comparison with Alternative Dimensionality Reduction Methods}
+
+The VAE results demonstrate strong consistency with alternative dimensionality reduction approaches. A comparative analysis is presented in Table \ref{tab:dr_comparison}.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|c|c|}
+\hline
+\textbf{Method} & \textbf{Cluster Separation} & \textbf{Interpretability} & \textbf{Computational Cost} \\
+\hline
+Standard Autoencoder & Good & High & Low \\
+\hline
+Autoencoder + SOM & Very Good & Very High (topology) & Medium \\
+\hline
+Autoencoder + t-SNE & Excellent (local) & High & High \\
+\hline
+VAE (this work) & \textbf{Excellent} & \textbf{Very High} & \textbf{Medium} \\
+\hline
+\end{tabular}
+\caption{Comparison of dimensionality reduction methods for player classification.}
+\label{tab:dr_comparison}
+\end{table}
+
+The VAE approach offers several advantages over deterministic autoencoders. The probabilistic latent space enables uncertainty quantification, while KL divergence regularization improves generalization. The model produces smoother interpolations between player types and demonstrates greater robustness to outliers compared to deterministic alternatives.
+
 \subsection{Autoencoders + UMAP}
 
 UMAP (Uniform Manifold Approximation and Projection) provides an alternative dimensionality reduction approach that preserves both local and global structure of the data. We applied UMAP to the 2D autoencoder latent vectors with parameters: 20 neighbors, minimum distance of 0.1, and random initialization (random seed 42). Unlike t-SNE which focuses primarily on local similarity, UMAP better preserves the global structure while maintaining computational efficiency and producing more stable embeddings.
@@ -189,11 +228,43 @@ The UMAP clustering reveals five distinct player groups with more granular role 
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.7\linewidth]{media/2d.png}
+    \includegraphics[width=0.7\linewidth]{media/2d.jpeg}
     \caption{UMAP + K-Means Clustering showing preserved global structure with distinct player archetypes.}
     \label{fig:umap_clustering}
 \end{figure}
 
 The UMAP visualization in Figure~\ref{fig:umap_clustering} demonstrates clearer cluster separation compared to t-SNE, with the elite players (Cluster 4) forming a distinct region, while role players and specialists occupy separate but connected regions. The preservation of global structure allows for better interpretation of the relationships between different player archetypes, showing how bench specialists (Cluster 1) transition into elite roles (Cluster 4), while 3\&D wings (Cluster 0) and limited-minute players (Cluster 3) occupy more specialized niches in the player ecosystem.
+
+\section{Conclusion}
+
+This study successfully applied multiple dimensionality reduction and clustering techniques to analyze NBA 2022-23 player statistics, revealing meaningful player archetypes that transcend traditional positional classifications. Our comprehensive analysis demonstrates that modern NBA player roles are better characterized by statistical patterns and playing styles rather than conventional position labels.
+
+\subsection{Key Findings}
+
+\textbf{Dimensionality Reduction Effectiveness:} The deep autoencoder achieved a remarkable 24:1 compression ratio (48 features to 2 dimensions) while preserving essential statistical structure, as evidenced by good reconstruction quality (RMSE = 0.629) and strong generalization (training/validation ratio = 1.075). This demonstrates that NBA player statistics, despite their high dimensionality, contain inherent low-dimensional structure that can be effectively captured through neural network-based compression.
+
+\textbf{Consistent Player Archetypes Across Methods:} Despite using different mathematical approaches, all dimensionality reduction methods (Autoencoder, SOM, t-SNE, VAE, UMAP) consistently identified 5-7 distinct player archetypes. The most stable clusters across all methods include: (1) Elite scorers and playmakers (averaging 18-20 PPG with high assists), (2) Defensive specialists and rim protectors (low scoring but exceptional rebounding and blocking), (3) Veteran role players and bench contributors (moderate, balanced statistics), (4) Limited-minute players (low production across metrics), and (5) Versatile two-way players (strong offensive and defensive contributions). This consistency across methodologies validates the robustness of these player classifications.
+
+\textbf{Statistical Roles Transcend Traditional Positions:} Comparison of k-Means clusters with traditional position labels (PG, SG, SF, PF, C) revealed significant mixing in the 2D latent spaces. Players with identical positions often appeared in different clusters based on their statistical profiles, while players from different positions frequently clustered together when sharing similar playing styles. For example, the "Elite Scoring Guards" cluster (Autoencoder analysis) contained both traditional point guards (Stephen Curry, Damian Lillard) and shooting guards (Bradley Beal, Kyrie Irving), unified by their high scoring (20.02 PPG) and playmaking (24.08\% AST) rather than positional labels.
+
+\textbf{Method-Specific Insights:} Each dimensionality reduction technique provided unique advantages: the standard autoencoder offered computational efficiency and interpretability; SOM visualization through U-matrices revealed smooth transitions and cluster boundaries in the player space; t-SNE excelled at separating local clusters for identifying specialist roles; the VAE approach enabled uncertainty quantification and probabilistic interpretations; UMAP balanced local and global structure preservation, showing how player roles connect within the broader NBA ecosystem. The convergence of findings across these diverse methods strengthens confidence in the identified player archetypes.
+
+\subsection{Implications for Basketball Analytics}
+
+The identified player archetypes have practical implications for team building, player evaluation, and roster construction. Teams can use these statistical profiles to identify complementary player types, target specific roles in free agency or trades, and develop players toward desired archetypes. The finding that statistical similarity transcends positions suggests that traditional positional thinking may limit roster flexibility in the modern NBA, where versatility and statistical production matter more than conventional labels.
+
+The separation of "Superstar Two-Way Players" from "Elite Scoring Guards" highlights the value premium placed on players who excel on both offense and defense. Players like LeBron James, Kevin Durant, and Giannis Antetokounmpo combine high scoring (17.98 PPG) with superior defensive metrics (23.34\% DRB, 3.52\% BLK), distinguishing them from pure offensive specialists. This quantifies the scarcity and value of true two-way excellence in the NBA.
+
+The identification of specialized roles like "3\&D Wings" (UMAP analysis) validates the NBA's strategic evolution toward position-less basketball built around shooting and defensive versatility. Players in this archetype provide crucial spacing and perimeter defense without requiring high usage rates, making them valuable complementary pieces for star-driven teams.
+
+\subsection{Limitations and Future Work}
+
+While this analysis successfully identified meaningful player archetypes, several limitations should be acknowledged. First, the dataset represents a single season (2022-23), limiting our ability to track player evolution or career trajectories over time. Longitudinal analysis across multiple seasons could reveal how players transition between archetypes throughout their careers. Second, the filtering criteria (minimum 5 games, 25 total minutes) excluded players with very limited opportunities, potentially missing emerging talents or late-season callups. Third, the analysis focused on traditional box score statistics and advanced metrics but did not incorporate spatial tracking data, play-by-play information, or contextual factors like opponent strength.
+
+Future work could extend this analysis in several directions: (1) incorporating temporal dynamics to model player development and aging curves, (2) including player tracking data for more nuanced understanding of playing styles and spatial tendencies, (3) developing hierarchical clustering approaches to capture both broad archetypes and fine-grained sub-roles, (4) applying transfer learning to generalize findings across different seasons or leagues, and (5) building predictive models to project player performance or identify undervalued players based on archetype membership. Additionally, validation against basketball domain experts could provide qualitative assessment of the identified archetypes and their practical utility for decision-making.
+
+\subsection{Closing Remarks}
+
+This work demonstrates the power of unsupervised learning and dimensionality reduction for discovering latent structure in complex sports analytics data. By combining deep autoencoders with multiple complementary visualization and clustering techniques, we successfully compressed 48-dimensional player statistics into interpretable 2D representations that reveal meaningful player roles. The consistency of findings across diverse methodological approaches provides strong evidence that these archetypes reflect genuine patterns in NBA player behavior rather than methodological artifacts. As the NBA continues to evolve toward position-less, analytics-driven basketball, statistical characterizations of player roles will become increasingly valuable for teams seeking competitive advantages in player evaluation and roster construction.
 
 \end{document}
