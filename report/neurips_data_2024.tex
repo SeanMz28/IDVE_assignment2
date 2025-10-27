@@ -43,6 +43,44 @@ The NBA 2022-23 statistics dataset underwent systematic data cleaning and prepro
 
 \section{Dimensionality Reduction}
 
+\subsection{Autoencoder Architecture and Training}
+
+We implemented a deep autoencoder using PyTorch to learn a compressed 2-dimensional representation of the 48-dimensional NBA player statistics. The autoencoder consists of an encoder network that compresses the input through progressively smaller hidden layers [128, 96, 64, 32] to a 2-dimensional latent space (compression ratio of 24:1), and a symmetric decoder network that reconstructs the original features from the latent representation. The architecture uses ReLU activation functions for non-linearity and was trained using the Adam optimizer with a learning rate of $5 \times 10^{-5}$ and batch size of 16.
+
+The training process employed early stopping with a patience of 30 epochs to prevent overfitting, monitoring validation loss on a held-out validation set (15\% of data). The model converged after 336 epochs with a best validation loss of 0.298 (MSE) and demonstrated good generalization (training/validation ratio of 1.075). The final model achieved a mean reconstruction error of 0.395 (MSE) on the test set, with an RMSE of 0.629, indicating that the 2D latent space successfully captures the essential structure of the 48-dimensional player statistics while discarding noise.
+
+\subsubsection{K-Means Clustering on 2D Latent Space}
+
+We applied k-Means clustering (k=5) directly to the 2D autoencoder latent representations to identify distinct player archetypes. This approach leverages the autoencoder's learned compressed representation to group players by statistical similarity. Table~\ref{tab:ae_cluster_stats} presents the statistical profiles of each cluster.
+
+\begin{table}[h!]
+\centering
+\caption{Autoencoder K-Means Cluster Statistical Summary}
+\label{tab:ae_cluster_stats}
+\begin{tabular}{lcccccc}
+\toprule
+\textbf{Cluster} & \textbf{PTS} & \textbf{AST\%} & \textbf{STL\%} & \textbf{BLK\%} & \textbf{ORB\%} & \textbf{DRB\%} \\
+\midrule
+0: Veteran Role Players & 9.89 & 13.74 & 1.54 & 1.16 & 3.36 & 12.65 \\
+1: Defensive Bigs & 5.60 & 7.80 & 1.32 & 3.85 & 11.22 & 21.43 \\
+2: Elite Scoring Guards & 20.02 & 24.08 & 1.51 & 1.32 & 3.36 & 14.93 \\
+3: Superstar Two-Way & 17.98 & 15.14 & 1.29 & 3.52 & 9.94 & 23.34 \\
+4: Deep Bench & 3.59 & 11.72 & 1.55 & 1.50 & 4.55 & 12.51 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\linewidth]{media/2a.png}
+    \caption{Left: 2D Autoencoder latent space with k-Means clusters. Right: Same space colored by traditional positions, showing that statistical similarity transcends positional labels.}
+    \label{fig:ae_clustering}
+\end{figure}
+
+The clustering reveals five distinct player archetypes: {\bf Cluster 0 (Veteran Role Players)} includes aging stars like John Wall, Klay Thompson, and Khris Middleton with moderate scoring (9.89 PPG) and balanced contributions; {\bf Cluster 1 (Defensive Bigs)} captures rim protectors like Ben Simmons and DeAndre Jordan with low scoring (5.60 PPG) but exceptional rebounding (21.43\% DRB) and shot-blocking (3.85\% BLK); {\bf Cluster 2 (Elite Scoring Guards)} contains the league's premier offensive players including Stephen Curry, Russell Westbrook, and Bradley Beal, averaging 20.02 PPG with elite playmaking (24.08\% AST); {\bf Cluster 3 (Superstar Two-Way Players)} identifies all-around excellence with LeBron James, Kevin Durant, and Giannis Antetokounmpo combining high scoring (17.98 PPG) with superior defensive metrics (23.34\% DRB, 3.52\% BLK); {\bf Cluster 4 (Deep Bench)} consists of players with minimal playing time and production (3.59 PPG) across all categories.
+
+The visualization in Figure~\ref{fig:ae_clustering} demonstrates that the autoencoder learned a meaningful latent space where player impact and playing style are naturally separated. The left side of the latent space contains defensive specialists (Clusters 1 and 3) with high rebounding and blocking, while the center and right contain offensive-focused players (Clusters 0, 2, 4) with varied scoring levels. Comparison with position-based coloring (right panel) reveals that traditional positions fail to capture modern player roles, as statistical similarity transcends positional labels.
+
 \subsection{Autoencoders + Self-organising maps}
 
 \begin{table}[h!]
